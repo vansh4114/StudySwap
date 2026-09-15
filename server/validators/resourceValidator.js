@@ -32,6 +32,24 @@ const createResourceSchema = z.object({
   tags: z.union([z.string(), z.array(z.string())]).optional()
 });
 
+const ratingSchema = z.object({
+  rating: z.coerce
+    .number({ required_error: 'Rating is required', invalid_type_error: 'Rating must be a number' })
+    .int('Rating must be an integer')
+    .min(1, 'Rating must be between 1 and 5')
+    .max(5, 'Rating must be between 1 and 5')
+});
+
+const reportSchema = z.object({
+  reason: z
+    .string({ required_error: 'Reason for report is required' })
+    .trim()
+    .min(3, 'Reason must be at least 3 characters long')
+    .max(500, 'Reason cannot exceed 500 characters')
+});
+
 module.exports = {
-  createResourceSchema
+  createResourceSchema,
+  ratingSchema,
+  reportSchema
 };

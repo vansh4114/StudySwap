@@ -35,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -48,6 +49,7 @@ app.get('/api/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/resources', resourceRoutes);
+app.use('/api/users', userRoutes);
 
 // 404 handler for API routes
 app.use((req, res, next) => {
