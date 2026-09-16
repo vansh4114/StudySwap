@@ -24,11 +24,24 @@ const fetchApi = async (endpoint, options = {}) => {
     body
   });
 
-  const data = await response.json();
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
 
   if (!response.ok) {
-    const error = new Error(data.message || 'API request failed');
+    let message = data.message;
+    if (response.status === 429) {
+      message = data.message || 'Too many requests. Please wait a few minutes and try again.';
+    } else if (!message) {
+      message = 'API request failed';
+    }
+
+    const error = new Error(message);
     error.status = response.status;
+    error.statusCode = response.status;
     error.data = data;
     throw error;
   }

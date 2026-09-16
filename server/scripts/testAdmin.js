@@ -18,6 +18,8 @@ const userRoutes = require('../routes/userRoutes');
 const adminRoutes = require('../routes/adminRoutes');
 const { errorHandler } = require('../middleware/errorHandler');
 
+const rateLimit = require('express-rate-limit');
+
 const PORT = 5055;
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'yZ9bO40bti5QMAH3fOwfJaaqThbAKFwSUt+L3TAQ2/s=';
@@ -27,6 +29,25 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Build test express app
 const app = express();
 app.use(express.json());
+
+const testLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: {
+    success: false,
+    message: 'Too many requests. Please try again in a few minutes.'
+  }
+});
+app.use('/api/rate-limit-test', testLimiter, (req, res) => res.json({ success: true }));
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/users', userRoutes);
@@ -250,6 +271,24 @@ const runTests = async () => {
     });
     const data15 = await res15.json();
     assert(res15.status === 200 && data15.page === 1, 'Hardened pagination normalizes page < 1 to page 1 and caps limit');
+
+    // TEST 16: Health check endpoint works
+    const res16 = await fetch(`${baseUrl}/health`);
+    const data16 = await res16.json();
+    assert(res16.status === 200 && data16.success === true, '/api/health returns 200 OK');
+
+    // TEST 17: HTTP 429 Rate limiting returns proper status and JSON payload
+    for (let i = 0; i < 5; i++) {
+      await fetch(`${baseUrl}/rate-limit-test`);
+    }
+    const res17 = await fetch(`${baseUrl}/rate-limit-test`);
+    const data17 = await res17.json();
+    assert(
+      res17.status === 429 &&
+        data17.success === false &&
+        data17.message.includes('Too many requests'),
+      'Rate limiter returns HTTP 429 with expected JSON structure'
+    );
 
     // Clean up test users
     await User.deleteMany({ email: { $in: ['student_test@example.com', 'admin_test@example.com'] } });
