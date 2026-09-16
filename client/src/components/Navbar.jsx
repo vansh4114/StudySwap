@@ -1,4 +1,4 @@
-import { BookOpen, Bookmark, FilePlus, LogOut, Menu, User, X } from 'lucide-react';
+import { BookOpen, Bookmark, FilePlus, LogOut, Menu, Shield, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -51,6 +51,16 @@ const Navbar = () => {
                   <Bookmark className="h-4 w-4" />
                   <span>Bookmarks</span>
                 </Link>
+
+                {user?.role === 'ADMIN' && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center space-x-1 text-purple-700 hover:text-purple-800 font-bold bg-purple-50 px-3 py-1.5 rounded-full transition-colors"
+                  >
+                    <Shield className="h-4 w-4 text-purple-600" />
+                    <span>Admin</span>
+                  </Link>
+                )}
 
                 <div className="h-5 w-px bg-gray-300 mx-1"></div>
 
@@ -133,6 +143,15 @@ const Navbar = () => {
               >
                 My Bookmarks
               </Link>
+              {user?.role === 'ADMIN' && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-purple-700 font-bold py-1"
+                >
+                  Admin Dashboard
+                </Link>
+              )}
               <Link
                 to="/profile"
                 onClick={() => setIsMenuOpen(false)}

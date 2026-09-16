@@ -9,10 +9,12 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer ')
   ) {
     try {
-      token = req.headers.authorization.split(' ')[1];
+      if (!process.env.JWT_SECRET) {
+        return next(new Error('JWT_SECRET environment variable is required'));
+      }
 
-      const secret = process.env.JWT_SECRET || 'dev_secret_key_studyswap_123';
-      const decoded = jwt.verify(token, secret);
+      token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       const user = await User.findById(decoded.id).select('-password');
       if (!user) {

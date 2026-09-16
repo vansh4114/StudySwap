@@ -4,8 +4,10 @@ const User = require('../models/User');
 const { registerSchema, loginSchema } = require('../validators/authValidator');
 
 const generateToken = (userId, role) => {
-  const secret = process.env.JWT_SECRET || 'dev_secret_key_studyswap_123';
-  return jwt.sign({ id: userId, role }, secret, { expiresIn: '30d' });
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is required');
+  }
+  return jwt.sign({ id: userId, role }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
 // @desc    Register a new user

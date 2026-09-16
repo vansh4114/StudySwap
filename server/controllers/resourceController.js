@@ -506,6 +506,18 @@ const reportResource = async (req, res, next) => {
   }
 };
 
+// Helper function to clean up Cloudinary asset and delete associated ratings, bookmarks, reports
+const deleteResourceCascade = async (resource) => {
+  if (resource.cloudinaryPublicId) {
+    await deleteFromCloudinary(resource.cloudinaryPublicId);
+  }
+
+  await Resource.findByIdAndDelete(resource._id);
+  await Rating.deleteMany({ resource: resource._id });
+  await Bookmark.deleteMany({ resource: resource._id });
+  await Report.deleteMany({ resource: resource._id });
+};
+
 // @desc    Delete a resource (Owner or Admin only)
 // @route   DELETE /api/resources/:id
 // @access  Private
@@ -538,18 +550,7 @@ const deleteResource = async (req, res, next) => {
       });
     }
 
-    // Delete Cloudinary asset if present
-    if (resource.cloudinaryPublicId) {
-      await deleteFromCloudinary(resource.cloudinaryPublicId);
-    }
-
-    // Delete resource document from DB
-    await Resource.findByIdAndDelete(id);
-
-    // Clean up related ratings, bookmarks, and reports
-    await Rating.deleteMany({ resource: id });
-    await Bookmark.deleteMany({ resource: id });
-    await Report.deleteMany({ resource: id });
+    await deleteResourceCascade(resource);
 
     return res.status(200).json({
       success: true,
@@ -570,5 +571,6 @@ module.exports = {
   bookmarkResource,
   removeBookmark,
   reportResource,
-  deleteResource
+  deleteResource,
+  deleteResourceCascade
 };

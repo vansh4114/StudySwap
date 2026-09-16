@@ -81,3 +81,24 @@ export const getUserBookmarks = () =>
 // Reports
 export const reportResource = (id, reason) =>
   fetchApi(`/resources/${id}/report`, { method: 'POST', body: { reason } });
+
+// Admin Services
+export const getAdminStats = () => fetchApi('/admin/stats', { method: 'GET' });
+
+export const getAdminResources = (queryParams = '') =>
+  fetchApi(`/admin/resources${queryParams ? `?${queryParams}` : ''}`, { method: 'GET' });
+
+export const updateResourceStatus = (id, status) =>
+  fetchApi(`/admin/resources/${id}/status`, { method: 'PATCH', body: { status } });
+
+export const adminDeleteResource = (id) =>
+  fetchApi(`/admin/resources/${id}`, { method: 'DELETE' });
+
+export const getAdminReports = (queryParams = '') =>
+  fetchApi(`/admin/reports${queryParams ? `?${queryParams}` : ''}`, { method: 'GET' });
+
+export const updateReportStatus = (id, status) =>
+  fetchApi(`/admin/reports/${id}/status`, { method: 'PATCH', body: { status } });
+
+export const getAdminUsers = (queryParams = '') =>
+  fetchApi(`/admin/users${queryParams ? `?${queryParams}` : ''}`, { method: 'GET' });
