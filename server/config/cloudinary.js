@@ -57,8 +57,62 @@ const deleteFromCloudinary = async (publicId) => {
   }
 };
 
+/**
+ * Generates a Cloudinary download URL with fl_attachment transformation flag
+ * @param {Object} resource - Resource model instance or object
+ * @returns {string} Download URL with attachment flag
+ */
+const generateDownloadUrl = (resource) => {
+  if (!resource) return '';
+  const { cloudinaryPublicId, fileUrl, fileName, fileType } = resource;
+
+  const originalName = fileName || 'download';
+  const nameWithoutExt = originalName.includes('.')
+    ? originalName.substring(0, originalName.lastIndexOf('.'))
+    : originalName;
+  const ext = originalName.includes('.')
+    ? originalName.split('.').pop().toLowerCase()
+    : (fileType || '').toLowerCase();
+
+  // Sanitize filename for Cloudinary transformation string
+  const safeBaseName = nameWithoutExt.replace(/[^a-zA-Z0-9_-]/g, '_') || 'file';
+
+  if (cloudinaryPublicId) {
+    try {
+      let resourceType = 'image';
+      if (fileUrl && fileUrl.includes('/raw/upload/')) {
+        resourceType = 'raw';
+      } else if (fileUrl && fileUrl.includes('/video/upload/')) {
+        resourceType = 'video';
+      }
+
+      const options = {
+        secure: true,
+        resource_type: resourceType,
+        flags: `attachment:${safeBaseName}`
+      };
+
+      if (resourceType !== 'raw') {
+        options.format = ext || 'pdf';
+      }
+
+      return cloudinary.url(cloudinaryPublicId, options);
+    } catch (err) {
+      console.error('Cloudinary url generation error, falling back to fileUrl:', err.message);
+    }
+  }
+
+  // Fallback if publicId not present or cloudinary.url fails
+  if (fileUrl && fileUrl.includes('/upload/')) {
+    return fileUrl.replace('/upload/', `/upload/fl_attachment:${safeBaseName}/`);
+  }
+
+  return fileUrl || '';
+};
+
 module.exports = {
   cloudinary,
   uploadToCloudinary,
-  deleteFromCloudinary
+  deleteFromCloudinary,
+  generateDownloadUrl
 };

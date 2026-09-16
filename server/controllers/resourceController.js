@@ -4,7 +4,7 @@ const Resource = require('../models/Resource');
 const Rating = require('../models/Rating');
 const Bookmark = require('../models/Bookmark');
 const Report = require('../models/Report');
-const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const { uploadToCloudinary, deleteFromCloudinary, generateDownloadUrl } = require('../config/cloudinary');
 const { createResourceSchema, ratingSchema, reportSchema } = require('../validators/resourceValidator');
 const {
   awardUploadPoints,
@@ -257,11 +257,14 @@ const downloadResource = async (req, res, next) => {
     // Check if download milestone is reached (+5 contribution points to uploader)
     await checkDownloadMilestone(resource);
 
+    // Generate attachment URL for download
+    const downloadUrl = generateDownloadUrl(resource);
+
     // Return download metadata and file URL
     return res.status(200).json({
       success: true,
       message: 'Download requested successfully',
-      downloadUrl: resource.fileUrl,
+      downloadUrl,
       fileName: resource.fileName,
       downloadCount: resource.downloadCount
     });
