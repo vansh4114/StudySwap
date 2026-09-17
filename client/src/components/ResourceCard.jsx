@@ -17,56 +17,61 @@ const ResourceCard = ({ resource }) => {
     tags
   } = resource;
 
-  const getTypeBadgeColor = (type) => {
+  const getTypeBadgeStyle = (type) => {
     switch (type) {
       case 'NOTES':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-[#DFFF00]/10 text-[#DFFF00] border-[#DFFF00]/30';
       case 'PYQ':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-purple-500/10 text-purple-300 border-purple-500/30';
       case 'ASSIGNMENT':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
       case 'BOOK':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/30';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-white/5 text-[#A5A8AA] border-white/10';
     }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-xs border border-gray-200 hover:shadow-md transition-shadow p-5 flex flex-col justify-between">
+    <div className="bg-[#101416] rounded-2xl border border-white/10 p-5 hover:border-white/25 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group shadow-xl shadow-black/40 relative">
       <div>
         {/* Header Badges */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <span
-            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${getTypeBadgeColor(
+            className={`text-[11px] font-bold tracking-wider px-2.5 py-0.5 rounded-full border uppercase ${getTypeBadgeStyle(
               resourceType
             )}`}
           >
             {resourceType}
           </span>
-          <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">
+          <span className="text-[11px] font-medium text-[#A5A8AA] bg-[#151A1D] px-2.5 py-0.5 rounded-md border border-white/5">
             Sem {semester} • {course}
           </span>
         </div>
 
         {/* Title & Subject */}
-        <h3 className="text-lg font-bold text-gray-900 line-clamp-1 mb-1 hover:text-indigo-600 transition-colors">
-          <Link to={`/resources/${_id}`}>{title}</Link>
+        <h3 className="text-base sm:text-lg font-bold text-[#F5F5F5] group-hover:text-[#DFFF00] transition-colors line-clamp-1 mb-1">
+          <Link to={`/resources/${_id}`} className="focus:outline-none focus:underline">
+            {title}
+          </Link>
         </h3>
-        <p className="text-xs font-semibold text-indigo-600 mb-2">{subject}</p>
+        <p className="text-xs font-semibold text-[#A5A8AA] tracking-wide mb-2 flex items-center space-x-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#DFFF00]"></span>
+          <span>{subject}</span>
+        </p>
 
         {/* Description Snippet */}
-        <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-          {description}
+        <p className="text-xs text-[#72777A] line-clamp-2 mb-4 leading-relaxed">
+          {description || 'No detailed description provided for this academic resource.'}
         </p>
 
         {/* Tags */}
         {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div className="flex flex-wrap gap-1.5 mb-4">
             {tags.slice(0, 3).map((tag, idx) => (
               <span
                 key={idx}
-                className="text-xs text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100"
+                className="text-[10px] text-[#A5A8AA] bg-[#151A1D] px-2 py-0.5 rounded border border-white/5"
               >
                 #{tag}
               </span>
@@ -76,26 +81,26 @@ const ResourceCard = ({ resource }) => {
       </div>
 
       {/* Card Footer */}
-      <div className="border-t border-gray-100 pt-3 mt-2 flex items-center justify-between text-xs text-gray-500">
-        <div className="flex items-center space-x-1 text-gray-600">
-          <User className="h-3.5 w-3.5" />
-          <span className="truncate max-w-[100px]">
-            {uploadedBy?.name || 'Anonymous'}
+      <div className="border-t border-white/10 pt-3.5 mt-2 flex items-center justify-between text-xs text-[#A5A8AA]">
+        <div className="flex items-center space-x-1.5 text-[#A5A8AA]">
+          <User className="h-3.5 w-3.5 text-[#72777A]" />
+          <span className="truncate max-w-[100px] text-xs">
+            {uploadedBy?.name || 'Student'}
           </span>
         </div>
 
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-1 text-amber-500 font-medium">
-            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+          <div className="flex items-center space-x-1 text-[#DFFF00] font-bold text-xs">
+            <Star className="h-3.5 w-3.5 fill-[#DFFF00] text-[#DFFF00]" />
             <span>{averageRating > 0 ? averageRating.toFixed(1) : 'New'}</span>
           </div>
 
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 text-[#72777A]">
             <Eye className="h-3.5 w-3.5" />
             <span>{viewCount}</span>
           </div>
 
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 text-[#72777A]">
             <Download className="h-3.5 w-3.5" />
             <span>{downloadCount}</span>
           </div>
