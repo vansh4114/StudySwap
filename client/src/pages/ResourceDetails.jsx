@@ -303,7 +303,7 @@ const ResourceDetails = () => {
                 Semester {resource.semester} • {resource.course}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-[#F5F5F5] tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-[#F5F5F5] tracking-tight leading-tight break-words">
               {resource.title}
             </h1>
             <p className="text-xs sm:text-sm font-semibold text-[#A5A8AA] flex items-center space-x-2">

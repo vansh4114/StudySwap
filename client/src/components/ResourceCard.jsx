@@ -1,4 +1,4 @@
-import { Download, Eye, FileText, Star, User } from 'lucide-react';
+import { Download, Eye, Star, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ResourceCard = ({ resource }) => {
@@ -44,7 +44,7 @@ const ResourceCard = ({ resource }) => {
           >
             {resourceType}
           </span>
-          <span className="text-[11px] font-medium text-[#A5A8AA] bg-[#151A1D] px-2.5 py-0.5 rounded-md border border-white/5">
+          <span className="text-[11px] font-medium text-[#A5A8AA] bg-[#151A1D] px-2.5 py-0.5 rounded-md border border-white/5 truncate max-w-[150px]">
             Sem {semester} • {course}
           </span>
         </div>
