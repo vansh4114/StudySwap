@@ -1,1 +1,79 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #050708;
+    --bg-secondary: #0A0D0F;
+    --surface-elevated: #101416;
+    --surface-secondary: #151A1D;
+    --text-primary: #F5F5F5;
+    --text-secondary: #A5A8AA;
+    --text-muted: #72777A;
+    --accent-lime: #DFFF00;
+    --accent-lime-alt: #CFFF00;
+    --border-subtle: rgba(255, 255, 255, 0.10);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --status-error: #FF5C5C;
+    --status-success: #B8FF4D;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--accent-lime);
+    color: #050708;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--accent-lime);
+    outline-offset: 2px;
+  }
+
+  /* Custom subtle dark scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #050708;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(223, 255, 0, 0.4);
+  }
+}
+
+@layer utilities {
+  .bg-surface-elevated {
+    background-color: #101416;
+  }
+  .bg-surface-secondary {
+    background-color: #151A1D;
+  }
+  .border-subtle {
+    border-color: rgba(255, 255, 255, 0.10);
+  }
+  .border-strong {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .text-lime-accent {
+    color: #DFFF00;
+  }
+  .bg-lime-accent {
+    background-color: #DFFF00;
+    color: #050708;
+  }
+}
