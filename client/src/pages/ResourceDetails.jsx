@@ -11,7 +11,7 @@ import {
   Star,
   Trash2
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ConfirmModal from '../components/ConfirmModal';
 import { useAuth } from '../context/AuthContext';
@@ -50,7 +50,13 @@ const ResourceDetails = () => {
   const [submittingReport, setSubmittingReport] = useState(false);
   const [submittingRating, setSubmittingRating] = useState(false);
 
+  // Guard against duplicate resource fetches for the same ID
+  const fetchedIdRef = useRef(null);
+
   useEffect(() => {
+    if (fetchedIdRef.current === id) return;
+    fetchedIdRef.current = id;
+
     const fetchResource = async () => {
       setLoading(true);
       setError(null);
@@ -58,21 +64,6 @@ const ResourceDetails = () => {
         const res = await getResourceById(id);
         if (res.success && res.resource) {
           setResource(res.resource);
-        }
-
-        // Check bookmark status if authenticated
-        if (isAuthenticated) {
-          try {
-            const bRes = await getUserBookmarks();
-            if (bRes.success && bRes.bookmarks) {
-              const bookmarked = bRes.bookmarks.some(
-                (b) => b.resource && (b.resource._id === id || b.resource === id)
-              );
-              setIsBookmarked(bookmarked);
-            }
-          } catch (bErr) {
-            console.error('Failed to check bookmark state:', bErr);
-          }
         }
       } catch (err) {
         console.error('Error fetching resource details:', err);
@@ -83,6 +74,27 @@ const ResourceDetails = () => {
     };
 
     fetchResource();
+  }, [id]);
+
+  // Check bookmark status separately when authenticated without re-fetching resource
+  useEffect(() => {
+    const checkBookmark = async () => {
+      if (isAuthenticated && id) {
+        try {
+          const bRes = await getUserBookmarks();
+          if (bRes.success && bRes.bookmarks) {
+            const bookmarked = bRes.bookmarks.some(
+              (b) => b.resource && (b.resource._id === id || b.resource === id)
+            );
+            setIsBookmarked(bookmarked);
+          }
+        } catch (bErr) {
+          console.error('Failed to check bookmark state:', bErr);
+        }
+      }
+    };
+
+    checkBookmark();
   }, [id, isAuthenticated]);
 
   const showFeedback = (msg, isErr = false) => {
