@@ -2,17 +2,14 @@ import {
   AlertCircle,
   ArrowLeft,
   Bookmark,
-  Calendar,
   CheckCircle,
   Download,
   Eye,
   FileText,
   Flag,
-  GraduationCap,
   Loader2,
   Star,
-  Trash2,
-  User
+  Trash2
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -204,10 +201,38 @@ const ResourceDetails = () => {
     }
   };
 
+  const getTypeBadgeStyle = (type) => {
+    switch (type) {
+      case 'NOTES':
+        return 'bg-[#DFFF00]/10 text-[#DFFF00] border-[#DFFF00]/30';
+      case 'PYQ':
+        return 'bg-purple-500/10 text-purple-300 border-purple-500/30';
+      case 'ASSIGNMENT':
+        return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
+      case 'BOOK':
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/30';
+      default:
+        return 'bg-white/5 text-[#A5A8AA] border-white/10';
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <Loader2 className="h-10 w-10 text-indigo-600 animate-spin" />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="bg-[#101416] border border-white/10 rounded-2xl p-8 animate-pulse space-y-6">
+          <div className="flex justify-between items-center">
+            <div className="h-6 w-24 bg-white/10 rounded-full"></div>
+            <div className="h-8 w-28 bg-white/5 rounded-xl"></div>
+          </div>
+          <div className="h-8 w-3/4 bg-white/10 rounded-lg"></div>
+          <div className="h-4 w-1/3 bg-white/5 rounded"></div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-y border-white/10">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-16 bg-white/5 rounded-xl"></div>
+            ))}
+          </div>
+          <div className="h-24 w-full bg-white/5 rounded-xl"></div>
+        </div>
       </div>
     );
   }
@@ -215,13 +240,13 @@ const ResourceDetails = () => {
   if (error || !resource) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-        <div className="bg-red-50 border border-red-200 text-red-700 p-8 rounded-xl mb-6">
-          <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-2" />
+        <div className="bg-[#FF5C5C]/10 border border-[#FF5C5C]/30 text-[#F5F5F5] p-8 rounded-2xl my-6">
+          <AlertCircle className="h-10 w-10 text-[#FF5C5C] mx-auto mb-3" />
           <h2 className="text-xl font-bold mb-2">Resource Not Found</h2>
-          <p className="text-sm text-red-600 mb-4">{error || 'The requested study resource could not be found.'}</p>
+          <p className="text-xs text-[#A5A8AA] mb-6">{error || 'The requested study resource could not be found.'}</p>
           <Link
             to="/"
-            className="inline-flex items-center space-x-2 px-4 py-2 bg-red-600 text-white font-medium text-sm rounded-lg hover:bg-red-700 transition-colors"
+            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#DFFF00] text-[#050708] font-bold text-xs rounded-full hover:bg-[#CFFF00] transition-colors shadow-[0_0_15px_rgba(223,255,0,0.15)]"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Browse</span>
@@ -241,135 +266,154 @@ const ResourceDetails = () => {
       {/* Back Link */}
       <Link
         to="/"
-        className="inline-flex items-center space-x-1 text-sm font-medium text-gray-500 hover:text-indigo-600 mb-6 transition-colors"
+        className="inline-flex items-center space-x-2 text-xs font-semibold text-[#A5A8AA] hover:text-[#F5F5F5] bg-[#101416] border border-white/10 px-3.5 py-1.5 rounded-full mb-6 transition-all hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFFF00]"
       >
-        <ArrowLeft className="h-4 w-4" />
-        <span>Back to Resources</span>
+        <ArrowLeft className="h-3.5 w-3.5" />
+        <span>Back to Browse</span>
       </Link>
 
       {/* Feedback Banners */}
       {actionSuccess && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-6 flex items-center space-x-2 animate-in fade-in">
-          <CheckCircle className="h-5 w-5 text-green-500" />
+        <div className="bg-[#B8FF4D]/10 border border-[#B8FF4D]/30 text-[#B8FF4D] px-4 py-3 rounded-xl text-xs mb-6 flex items-center space-x-2 animate-in fade-in">
+          <CheckCircle className="h-4 w-4 text-[#B8FF4D] shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
       {actionError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-6 flex items-center space-x-2 animate-in fade-in">
-          <AlertCircle className="h-5 w-5 text-red-500" />
+        <div className="bg-[#FF5C5C]/10 border border-[#FF5C5C]/30 text-[#FF5C5C] px-4 py-3 rounded-xl text-xs mb-6 flex items-center space-x-2 animate-in fade-in">
+          <AlertCircle className="h-4 w-4 text-[#FF5C5C] shrink-0" />
           <span>{actionError}</span>
         </div>
       )}
 
       {/* Main Container */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
+      <div className="bg-[#101416] rounded-2xl border border-white/10 shadow-2xl p-6 sm:p-8 relative">
         {/* Header section */}
         <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-          <div className="space-y-2 max-w-2xl">
+          <div className="space-y-3 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">
+              <span
+                className={`text-[11px] font-bold tracking-wider px-3 py-0.5 rounded-full border uppercase ${getTypeBadgeStyle(
+                  resource.resourceType
+                )}`}
+              >
                 {resource.resourceType}
               </span>
-              <span className="text-xs font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-md">
+              <span className="text-[11px] font-medium text-[#A5A8AA] bg-[#151A1D] px-3 py-0.5 rounded-md border border-white/5">
                 Semester {resource.semester} • {resource.course}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">{resource.title}</h1>
-            <p className="text-sm font-semibold text-indigo-600">{resource.subject}</p>
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-[#F5F5F5] tracking-tight leading-tight">
+              {resource.title}
+            </h1>
+            <p className="text-xs sm:text-sm font-semibold text-[#A5A8AA] flex items-center space-x-2">
+              <span className="h-2 w-2 rounded-full bg-[#DFFF00]"></span>
+              <span>{resource.subject}</span>
+            </p>
           </div>
 
           {/* Action buttons (Bookmark & Delete) */}
           <div className="flex items-center space-x-2">
             <button
               onClick={handleBookmarkToggle}
-              className={`p-2.5 rounded-lg border transition-colors cursor-pointer flex items-center space-x-1 ${
+              className={`px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFFF00] ${
                 isBookmarked
-                  ? 'bg-amber-50 border-amber-300 text-amber-600'
-                  : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                  ? 'bg-[#DFFF00]/10 border-[#DFFF00]/30 text-[#DFFF00]'
+                  : 'bg-[#151A1D] border-white/10 text-[#A5A8AA] hover:text-[#F5F5F5] hover:bg-white/5'
               }`}
               title={isBookmarked ? 'Remove Bookmark' : 'Add Bookmark'}
+              aria-label={isBookmarked ? 'Remove Bookmark' : 'Add Bookmark'}
             >
-              <Bookmark className={`h-5 w-5 ${isBookmarked ? 'fill-amber-500' : ''}`} />
-              <span className="text-xs font-semibold">{isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+              <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-[#DFFF00]' : ''}`} />
+              <span>{isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
             </button>
 
             {isOwner && (
               <button
                 onClick={() => setIsDeleteModalOpen(true)}
-                className="p-2.5 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors cursor-pointer flex items-center space-x-1"
+                className="px-3 py-2 rounded-xl border border-[#FF5C5C]/25 bg-[#FF5C5C]/10 text-[#FF5C5C] hover:bg-[#FF5C5C]/20 transition-all cursor-pointer flex items-center space-x-1.5 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5C5C]"
                 title="Delete Resource"
+                aria-label="Delete Resource"
               >
-                <Trash2 className="h-5 w-5" />
-                <span className="text-xs font-semibold">Delete</span>
+                <Trash2 className="h-4 w-4" />
+                <span>Delete</span>
               </button>
             )}
           </div>
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-gray-100 mb-6 bg-gray-50/50 rounded-xl px-4">
-          <div className="flex items-center space-x-2 text-gray-700">
-            <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-white/10 mb-6 bg-[#151A1D]/60 rounded-xl px-5 border border-white/5">
+          <div className="flex items-center space-x-3 text-[#F5F5F5]">
+            <div className="p-2 rounded-lg bg-[#DFFF00]/10 text-[#DFFF00]">
+              <Star className="h-4 w-4 fill-[#DFFF00]" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Average Rating</p>
-              <p className="text-sm font-bold">
-                {resource.averageRating > 0 ? `${resource.averageRating.toFixed(1)} / 5.0` : 'No ratings'}
+              <p className="text-[10px] uppercase tracking-wider text-[#72777A] font-semibold">Average Rating</p>
+              <p className="text-sm font-extrabold text-[#F5F5F5]">
+                {resource.averageRating > 0 ? `${resource.averageRating.toFixed(1)} / 5.0` : 'New'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-gray-700">
-            <Eye className="h-5 w-5 text-blue-500" />
+          <div className="flex items-center space-x-3 text-[#F5F5F5]">
+            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+              <Eye className="h-4 w-4" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Total Views</p>
-              <p className="text-sm font-bold">{resource.viewCount}</p>
+              <p className="text-[10px] uppercase tracking-wider text-[#72777A] font-semibold">Total Views</p>
+              <p className="text-sm font-extrabold text-[#F5F5F5]">{resource.viewCount}</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-gray-700">
-            <Download className="h-5 w-5 text-green-500" />
+          <div className="flex items-center space-x-3 text-[#F5F5F5]">
+            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <Download className="h-4 w-4" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Downloads</p>
-              <p className="text-sm font-bold">{resource.downloadCount}</p>
+              <p className="text-[10px] uppercase tracking-wider text-[#72777A] font-semibold">Downloads</p>
+              <p className="text-sm font-extrabold text-[#F5F5F5]">{resource.downloadCount}</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-gray-700">
-            <FileText className="h-5 w-5 text-purple-500" />
+          <div className="flex items-center space-x-3 text-[#F5F5F5]">
+            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+              <FileText className="h-4 w-4" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">File Info</p>
-              <p className="text-sm font-bold uppercase">{resource.fileType || 'Doc'}</p>
+              <p className="text-[10px] uppercase tracking-wider text-[#72777A] font-semibold">File Info</p>
+              <p className="text-sm font-extrabold uppercase text-[#F5F5F5]">{resource.fileType || 'Doc'}</p>
             </div>
           </div>
         </div>
 
         {/* Description Section */}
         <div className="mb-6">
-          <h3 className="text-sm font-bold text-gray-900 mb-2">Description</h3>
-          <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
-            {resource.description}
+          <h3 className="text-xs font-bold text-[#A5A8AA] uppercase tracking-wider mb-2">Description</h3>
+          <p className="text-xs sm:text-sm text-[#F5F5F5] whitespace-pre-line leading-relaxed bg-[#151A1D] p-4 rounded-xl border border-white/5">
+            {resource.description || 'No detailed description provided for this academic resource.'}
           </p>
         </div>
 
-        {/* Metadata Details */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-gray-50 p-4 rounded-xl text-xs sm:text-sm">
+        {/* Metadata Details Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-[#151A1D]/40 p-4 rounded-xl border border-white/5 text-xs">
           <div>
-            <span className="text-gray-500">University / Institution:</span>{' '}
-            <span className="font-semibold text-gray-800">{resource.university || 'Not specified'}</span>
+            <span className="text-[#72777A]">University / Institution:</span>{' '}
+            <span className="font-semibold text-[#F5F5F5]">{resource.university || 'Not specified'}</span>
           </div>
           <div>
-            <span className="text-gray-500">Uploaded By:</span>{' '}
-            <span className="font-semibold text-gray-800">
+            <span className="text-[#72777A]">Uploaded By:</span>{' '}
+            <span className="font-semibold text-[#F5F5F5]">
               {resource.uploadedBy?.name || 'Student'} ({resource.uploadedBy?.college || 'College'})
             </span>
           </div>
           <div>
-            <span className="text-gray-500">File Name:</span>{' '}
-            <span className="font-medium text-gray-800 truncate">{resource.fileName}</span>
+            <span className="text-[#72777A]">File Name:</span>{' '}
+            <span className="font-mono text-[#A5A8AA] truncate block sm:inline">{resource.fileName}</span>
           </div>
           <div>
-            <span className="text-gray-500">Uploaded On:</span>{' '}
-            <span className="font-medium text-gray-800">
+            <span className="text-[#72777A]">Uploaded On:</span>{' '}
+            <span className="font-semibold text-[#F5F5F5]">
               {new Date(resource.createdAt).toLocaleDateString()}
             </span>
           </div>
@@ -378,12 +422,12 @@ const ResourceDetails = () => {
         {/* Tags */}
         {resource.tags && resource.tags.length > 0 && (
           <div className="mb-8">
-            <h4 className="text-xs font-semibold text-gray-500 mb-2">TAGS</h4>
+            <h4 className="text-[10px] font-bold text-[#72777A] uppercase tracking-wider mb-2">TAGS</h4>
             <div className="flex flex-wrap gap-1.5">
               {resource.tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="text-xs bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md font-medium"
+                  className="text-[11px] bg-[#151A1D] text-[#A5A8AA] px-2.5 py-1 rounded-md font-medium border border-white/5"
                 >
                   #{tag}
                 </span>
@@ -392,12 +436,13 @@ const ResourceDetails = () => {
           </div>
         )}
 
-        {/* Primary Download Button */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
+        {/* Primary Download Button & Interactive Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/10">
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 text-white font-semibold text-sm rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
+            className="w-full sm:w-auto px-8 py-3.5 bg-[#DFFF00] text-[#050708] font-extrabold text-sm rounded-full hover:bg-[#CFFF00] disabled:opacity-50 transition-all shadow-[0_0_25px_rgba(223,255,0,0.2)] flex items-center justify-center space-x-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFFF00]"
+            aria-label="Download Resource"
           >
             {downloading ? (
               <>
@@ -413,21 +458,22 @@ const ResourceDetails = () => {
           </button>
 
           {/* Interactive Rating Component */}
-          <div className="flex items-center space-x-3 bg-gray-50 px-4 py-2 rounded-xl border border-gray-200">
-            <span className="text-xs font-semibold text-gray-600">Rate this note:</span>
+          <div className="flex items-center space-x-3 bg-[#151A1D] px-4 py-2 rounded-xl border border-white/10">
+            <span className="text-xs font-semibold text-[#A5A8AA]">Rate note:</span>
             <div className="flex items-center space-x-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   onClick={() => handleRate(star)}
                   disabled={submittingRating}
-                  className="p-1 hover:scale-110 transition-transform cursor-pointer"
+                  aria-label={`Rate ${star} out of 5 stars`}
+                  className="p-1 hover:scale-110 transition-transform cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#DFFF00] rounded"
                 >
                   <Star
-                    className={`h-5 w-5 ${
+                    className={`h-4 w-4 ${
                       star <= (userRating || Math.round(resource.averageRating))
-                        ? 'fill-amber-400 text-amber-400'
-                        : 'text-gray-300'
+                        ? 'fill-[#DFFF00] text-[#DFFF00]'
+                        : 'text-[#72777A]'
                     }`}
                   />
                 </button>
@@ -438,10 +484,11 @@ const ResourceDetails = () => {
           {/* Report Link */}
           <button
             onClick={() => setIsReportModalOpen(true)}
-            className="text-xs text-gray-400 hover:text-red-600 flex items-center space-x-1 transition-colors cursor-pointer"
+            className="text-xs text-[#72777A] hover:text-[#FF5C5C] flex items-center space-x-1.5 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF5C5C] p-1 rounded"
+            aria-label="Report inappropriate content"
           >
             <Flag className="h-3.5 w-3.5" />
-            <span>Report inappropriate content</span>
+            <span>Report issue</span>
           </button>
         </div>
       </div>
@@ -465,23 +512,24 @@ const ResourceDetails = () => {
       >
         <form onSubmit={handleReportSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
+            <label htmlFor="report-reason-input" className="block text-xs font-semibold text-[#A5A8AA] mb-1.5 uppercase tracking-wider">
               Reason for report *
             </label>
             <textarea
+              id="report-reason-input"
               rows={4}
               required
               value={reportReason}
               onChange={(e) => setReportReason(e.target.value)}
-              placeholder="Describe why this resource is inappropriate, incorrect, or violating copyright..."
-              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+              placeholder="Describe why this resource is inappropriate, incorrect, or violating terms..."
+              className="w-full p-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all"
             />
           </div>
           <div className="flex justify-end space-x-2">
             <button
               type="submit"
               disabled={submittingReport || !reportReason.trim()}
-              className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors cursor-pointer"
+              className="px-4 py-2 bg-[#FF5C5C] text-[#050708] text-xs font-bold rounded-xl hover:bg-[#FF5C5C]/90 disabled:opacity-50 transition-colors cursor-pointer shadow-[0_0_15px_rgba(255,92,92,0.2)]"
             >
               {submittingReport ? 'Submitting...' : 'Submit Report'}
             </button>

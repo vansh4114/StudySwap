@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle, FileUp, Loader2, UploadCloud } from 'lucide-react';
+import { AlertCircle, CheckCircle, FileUp, Loader2, Sparkles, UploadCloud } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { uploadResource } from '../services/api';
@@ -84,182 +84,213 @@ const UploadResource = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
-        <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-100">
-          <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-            <UploadCloud className="h-7 w-7" />
+      <div className="bg-[#101416] rounded-2xl border border-white/10 shadow-2xl p-6 sm:p-8">
+        {/* Header & Contribution Points Badge */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="p-3 bg-[#DFFF00]/10 border border-[#DFFF00]/25 text-[#DFFF00] rounded-2xl">
+              <UploadCloud className="h-7 w-7" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-extrabold text-[#F5F5F5] tracking-tight">Upload Study Resource</h1>
+              <p className="text-xs text-[#A5A8AA] mt-0.5">
+                Share lecture notes, question papers, or assignments with fellow students
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-extrabold text-gray-900">Upload Study Resource</h1>
-            <p className="text-xs sm:text-sm text-gray-600">
-              Share your lecture notes, previous year question papers, or assignments with fellow students
-            </p>
+
+          <div className="bg-[#DFFF00]/10 border border-[#DFFF00]/30 px-3.5 py-1.5 rounded-full flex items-center space-x-1.5 text-xs font-extrabold text-[#DFFF00]">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>+10 ⭐ CONTRIBUTION POINTS</span>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-6 flex items-center space-x-2">
-            <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
+          <div className="bg-[#FF5C5C]/10 border border-[#FF5C5C]/30 text-[#FF5C5C] px-4 py-3 rounded-xl text-xs mb-6 flex items-center space-x-2 animate-in fade-in">
+            <AlertCircle className="h-4 w-4 shrink-0 text-[#FF5C5C]" />
             <span>{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-6 flex items-center space-x-2">
-            <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
+          <div className="bg-[#B8FF4D]/10 border border-[#B8FF4D]/30 text-[#B8FF4D] px-4 py-3 rounded-xl text-xs mb-6 flex items-center space-x-2 animate-in fade-in">
+            <CheckCircle className="h-4 w-4 shrink-0 text-[#B8FF4D]" />
             <span>{successMsg}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Title */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Title / Resource Name *
-            </label>
-            <input
-              type="text"
-              name="title"
-              required
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="e.g. Data Structures & Algorithms Complete Notes"
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Description *
-            </label>
-            <textarea
-              name="description"
-              rows={3}
-              required
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Provide a detailed overview of what topics this study resource covers..."
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
-            />
-          </div>
-
-          {/* Grid of Resource Meta */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Resource Type *
-              </label>
-              <select
-                name="resourceType"
-                value={formData.resourceType}
-                onChange={handleChange}
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
-              >
-                <option value="NOTES">Notes</option>
-                <option value="PYQ">PYQ (Previous Year Paper)</option>
-                <option value="ASSIGNMENT">Assignment</option>
-                <option value="BOOK">Book / Reference</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Section 1: Resource Information */}
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold text-[#DFFF00] uppercase tracking-wider">
+              1. Resource Details
+            </h3>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Semester *
-              </label>
-              <select
-                name="semester"
-                value={formData.semester}
-                onChange={handleChange}
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                  <option key={num} value={num}>
-                    Semester {num}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Subject *
+              <label htmlFor="upload-title" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                Title / Resource Name *
               </label>
               <input
+                id="upload-title"
                 type="text"
-                name="subject"
+                name="title"
                 required
-                value={formData.subject}
+                value={formData.title}
                 onChange={handleChange}
-                placeholder="e.g. Data Structures"
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                placeholder="e.g. Data Structures & Algorithms Complete Notes"
+                className="w-full px-4 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Course / Branch *
+              <label htmlFor="upload-description" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                Description *
               </label>
-              <input
-                type="text"
-                name="course"
+              <textarea
+                id="upload-description"
+                name="description"
+                rows={3}
                 required
-                value={formData.course}
+                value={formData.description}
                 onChange={handleChange}
-                placeholder="e.g. B.Tech CS"
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
+                placeholder="Provide an overview of what topics and chapters this resource covers..."
+                className="w-full px-4 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                University / Institution
-              </label>
-              <input
-                type="text"
-                name="university"
-                value={formData.university}
-                onChange={handleChange}
-                placeholder="e.g. Delhi University"
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
-              />
+          {/* Section 2: Academic Classification */}
+          <div className="space-y-4 pt-2">
+            <h3 className="text-xs font-bold text-[#DFFF00] uppercase tracking-wider">
+              2. Academic Classification
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="upload-resourceType" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                  Resource Type *
+                </label>
+                <select
+                  id="upload-resourceType"
+                  name="resourceType"
+                  value={formData.resourceType}
+                  onChange={handleChange}
+                  className="w-full px-3.5 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
+                >
+                  <option value="NOTES" className="bg-[#101416]">Notes</option>
+                  <option value="PYQ" className="bg-[#101416]">PYQ (Previous Year Paper)</option>
+                  <option value="ASSIGNMENT" className="bg-[#101416]">Assignment</option>
+                  <option value="BOOK" className="bg-[#101416]">Book / Reference</option>
+                  <option value="OTHER" className="bg-[#101416]">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="upload-semester" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                  Semester *
+                </label>
+                <select
+                  id="upload-semester"
+                  name="semester"
+                  value={formData.semester}
+                  onChange={handleChange}
+                  className="w-full px-3.5 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                    <option key={num} value={num} className="bg-[#101416]">
+                      Semester {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="upload-subject" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                  Subject *
+                </label>
+                <input
+                  id="upload-subject"
+                  type="text"
+                  name="subject"
+                  required
+                  value={formData.subject}
+                  onChange={handleChange}
+                  placeholder="e.g. Data Structures"
+                  className="w-full px-3.5 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="upload-course" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                  Course / Branch *
+                </label>
+                <input
+                  id="upload-course"
+                  type="text"
+                  name="course"
+                  required
+                  value={formData.course}
+                  onChange={handleChange}
+                  placeholder="e.g. B.Tech CS"
+                  className="w-full px-3.5 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Tags (Comma separated)
-              </label>
-              <input
-                type="text"
-                name="tags"
-                value={formData.tags}
-                onChange={handleChange}
-                placeholder="e.g. dsa, trees, sorting"
-                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="upload-university" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                  University / Institution
+                </label>
+                <input
+                  id="upload-university"
+                  type="text"
+                  name="university"
+                  value={formData.university}
+                  onChange={handleChange}
+                  placeholder="e.g. Delhi University"
+                  className="w-full px-3.5 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="upload-tags" className="block text-xs font-semibold text-[#A5A8AA] uppercase tracking-wider mb-1.5">
+                  Tags (Comma separated)
+                </label>
+                <input
+                  id="upload-tags"
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleChange}
+                  placeholder="e.g. dsa, trees, sorting"
+                  className="w-full px-3.5 py-3 bg-[#151A1D] border border-white/10 rounded-xl text-xs text-[#F5F5F5] placeholder:text-[#72777A] focus:border-[#DFFF00] focus:ring-1 focus:ring-[#DFFF00] focus:outline-none transition-all font-medium"
+                />
+              </div>
             </div>
           </div>
 
-          {/* File Input Box */}
+          {/* Section 3: File Attachment Dropzone */}
           <div className="pt-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-2">
-              Resource File * (Max 10 MB: PDF, DOC, DOCX, PPT, PPTX, TXT, Images)
+            <h3 className="text-xs font-bold text-[#DFFF00] uppercase tracking-wider mb-2">
+              3. Attachment File
+            </h3>
+            <label htmlFor="upload-file-input" className="block text-xs font-semibold text-[#A5A8AA] mb-2">
+              Select Document (Max 10 MB: PDF, DOC, DOCX, PPT, PPTX, TXT, Images)
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-indigo-500 transition-colors bg-gray-50/50">
-              <FileUp className="h-10 w-10 text-gray-400 mx-auto mb-2" />
+            <div className="border-2 border-dashed border-white/15 hover:border-[#DFFF00]/50 rounded-2xl p-6 text-center transition-all bg-[#151A1D]/60 group">
+              <FileUp className="h-8 w-8 text-[#72777A] group-hover:text-[#DFFF00] mx-auto mb-2 transition-colors" />
               <input
+                id="upload-file-input"
                 type="file"
                 required
                 onChange={handleFileChange}
                 accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.webp"
-                className="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                className="block w-full text-xs text-[#A5A8AA] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-[#DFFF00]/10 file:text-[#DFFF00] hover:file:bg-[#DFFF00]/20 cursor-pointer"
               />
               {selectedFile && (
-                <p className="mt-2 text-xs font-medium text-indigo-600 truncate">
-                  Selected: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                <p className="mt-3 text-xs font-semibold text-[#DFFF00] truncate">
+                  ✓ Selected: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
                 </p>
               )}
             </div>
@@ -269,15 +300,15 @@ const UploadResource = () => {
           <button
             type="submit"
             disabled={loading || !selectedFile}
-            className="w-full py-3.5 px-4 bg-indigo-600 text-white font-semibold text-sm rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center cursor-pointer shadow-xs"
+            className="w-full py-4 px-4 bg-[#DFFF00] text-[#050708] font-extrabold text-xs rounded-full hover:bg-[#CFFF00] disabled:opacity-50 transition-all flex items-center justify-center cursor-pointer shadow-[0_0_25px_rgba(223,255,0,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DFFF00]"
           >
             {loading ? (
               <>
-                <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                Uploading to Cloudinary...
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                Uploading Resource to Cloudinary...
               </>
             ) : (
-              'Upload Resource (+10 ⭐ Points)'
+              'Upload Resource (+10 ⭐ Contribution Points)'
             )}
           </button>
         </form>
