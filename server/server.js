@@ -1,71 +1,14 @@
-const express = require('express');
-const cors = require('cors');
 const dotenv = require('dotenv');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/database');
-const { errorHandler, notFound } = require('./middleware/errorHandler');
+const app = require('./app');
 
 // Load environment variables
 dotenv.config();
 
 // Connect to MongoDB
-connectDB();
-
-const app = express();
-
-// Security middleware
-app.use(helmet());
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // Limit each IP to 300 requests per windowMs
-  message: {
-    success: false,
-    message: 'Too many requests. Please try again in a few minutes.'
-  }
+connectDB().catch((err) => {
+  console.error('Initial MongoDB connection error:', err.message);
 });
-app.use('/api', limiter);
-
-// CORS
-app.use(cors());
-
-// Body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Routes
-const authRoutes = require('./routes/authRoutes');
-const resourceRoutes = require('./routes/resourceRoutes');
-const userRoutes = require('./routes/userRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
-});
-
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/resources', resourceRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
-
-// 404 handler for API routes
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) {
-    return notFound(req, res, next);
-  }
-  next();
-});
-
-// Centralized error handler
-app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
